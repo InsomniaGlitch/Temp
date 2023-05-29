@@ -2,12 +2,14 @@ package players;
 import weapons.*;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import effects.effect;
 import paths.path;
 import powers.power;
 
 public class player {
+    Scanner in = new Scanner(System.in);
     public String name;
     public String description;
     public int max_health;
@@ -34,12 +36,38 @@ public class player {
         this.turn = false;
     }
 
+    public player() {
+    }
+
+    public player create_player() {
+        player p = new player();
+        System.out.print("Name: ");
+        p.name = in.nextLine();
+        System.out.print("Description: ");
+        p.description = in.nextLine();
+        System.out.print("Health");
+        p.max_health = in.nextInt();
+        System.out.print("Defence");
+        p.def = in.nextInt();
+        System.out.print("Speed");
+        p.speed = in.nextInt();
+        return p;
+    }
+
     public void equip(weapon new_weapon) {
         if (this.weapon.getType() == this.path.getWeaponType()) {
             this.weapon = new_weapon;
         } else {
             System.out.println("Cannot be equipped");
         }
+    }
+
+    public void embrace_path(path path) {
+        this.path = path;
+    }
+
+    public void embrace_power(power power) {
+        this.power = power;
     }
 
     public void kill(player p) {

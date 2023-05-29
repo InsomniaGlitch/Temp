@@ -178,11 +178,27 @@ public abstract class fight {
             case "list players":
                 listPlayers();
                 turn(getByName(p.name));
-            case "equip":
+            case "embrace path":
                 String s = in.nextLine();
+                for (path pt : pathlist) {
+                    if (pt.name == s) {
+                        getByName(p.name).embrace_path(pt);
+                        break;
+                    }
+                }
+            case "equip":
+                String st = in.nextLine();
                 for (weapon w : weaponlist) {
-                    if (w.name == s) {
+                    if (w.name == st) {
                         getByName(p.name).equip(w);
+                        break;
+                    }
+                }
+            case "embrace power":
+                String str = in.nextLine();
+                for (power po : powerlist) {
+                    if (po.name == str) {
+                        getByName(p.name).embrace_power(po);
                         break;
                     }
                 }
