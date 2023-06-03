@@ -17,9 +17,11 @@ public class Main {
             }
             command = in.nextLine();
         }
-        System.out.print("The battle starts, and the fighters are: " + everyone.toString());
+        System.out.print("The battle starts, and the fighters are: " + everyone.get(0).name);
+        for (int i =1; i < everyone.size(); i++) { System.out.print(", " + everyone.get(i).name); }
+        System.out.print('\n');
         fight f = new fight(everyone);
-        f.cycle();
+        f.cycle(1);
     }
 
     public static player create_player() {

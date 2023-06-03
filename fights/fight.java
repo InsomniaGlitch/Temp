@@ -152,7 +152,8 @@ public class fight {
         return plrlst;
     }
 
-    public void cycle() {
+    public void cycle(int count) {
+        System.out.println("The " + count + " cycle begins");
         playerlist = SpeedSort(playerlist);
         turn(playerlist.get(0));
         if (playerlist.size() == 1) {
@@ -160,7 +161,7 @@ public class fight {
         } else if (playerlist.size() == 0) {
             System.out.println("Only dead bodies lie around. No living souls are on this field. No one won");
         } else {
-            cycle();
+            cycle(count + 1);
         }
     }
 
