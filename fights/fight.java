@@ -27,7 +27,8 @@ public class fight {
 
     public void listWeapons() {
         for (weapon weapon : weaponlist) {
-            System.out.println(weapon.name);
+            System.out.println(weapon.name + '\n' + '\t'+ "Type: " + weapon.type + '\n' + '\t'+ "Damage: " + weapon.damage + '\n' + '\t' + "Crit rate: " + weapon.crit_rate + '\n' + '\t'
+             + "Crit damage: " + weapon.crit_damage  + '\n' + '\t'+ "Effects: " + getWEffects(weapon));
         }
     }
 
@@ -45,7 +46,8 @@ public class fight {
 
     public void listPlayers() {
         for (player player : playerlist) {
-            System.out.println(player.name + '\n' + '\t' + "Description: " + player.description);
+            System.out.println(player.name + '\n' + '\t' + "Description: " + player.description + '\n' + '\t' + "Health: " + player.curr_health + "/" + player.max_health
+            + '\n' + '\t' + "Path: " + getPName(player.path) + '\n' + '\t' + "Weapon: " + getWName(player.weapon) + '\n' + '\t' + "Status: " + getPEffects(player));
         }
     }
 
@@ -163,7 +165,7 @@ public class fight {
     }
 
     public void turn(player p) {
-        System.out.println('\n' + p.name + " turn, his index is " + playerlist.indexOf(getByName(p.name)));
+        System.out.println('\n' + p.name + "'s turn");
         switch (in.nextLine()) {
             case "new effect":
                 add_effect();
@@ -198,6 +200,7 @@ public class fight {
                 for (path pt : pathlist) {
                     if (pt.name.equals(s)) {
                         getByName(p.name).embrace_path(pt);
+                        System.out.println(p.name + " became " + pt.name);
                         break;
                     }
                 }
@@ -209,6 +212,7 @@ public class fight {
                 for (weapon w : weaponlist) {
                     if (w.name.equals(st)) {
                         getByName(p.name).equip(w);
+                        System.out.println(p.name + " equipped " + w.name);
                         break;
                     }
                 }
@@ -220,12 +224,14 @@ public class fight {
                 for (power po : powerlist) {
                     if (po.name.equals(str)) {
                         getByName(p.name).embrace_power(po);
+                        System.out.println(p.name + " learned " + po.name);
                         break;
                     }
                 }
                 System.out.println("No such power");
                 turn(p);
             case "attack":
+                System.out.print("Player: ");
                 getByName(p.name).attack(getByName(in.nextLine()));
                 break;
             case "Use class power":
@@ -237,6 +243,11 @@ public class fight {
         }
         if (p.curr_health > p.max_health) {
             p.curr_health = p.max_health;
+        }
+        for (player player : playerlist) {
+            if (player.equals(null)) {
+                playerlist.remove(player);
+            }
         }
         if (playerlist.size() > 1 && playerlist.indexOf(getByName(p.name)) != playerlist.size() - 1 && p.surepiority > playerlist.get(playerlist.indexOf(getByName(p.name)) + 1).speed) {
             getByName(p.name).surepiority -= playerlist.get(playerlist.indexOf(getByName(p.name)) + 1).speed;
@@ -252,7 +263,7 @@ public class fight {
 
     public player getByName(String name) {
         for (player p : playerlist) {
-            if (p.name == name) {
+            if (p.name.equals(name)) {
                 return p;
             }
         }
@@ -266,5 +277,37 @@ public class fight {
             }
         }
         return null;
+    }
+
+    public String getWName(weapon w) {
+        if (w != null) {
+            return w.name;
+        } else {
+            return null;
+        }
+    }
+
+    public String getPName(path p) {
+        if (p != null) {
+            return p.name;
+        } else {
+            return null;
+        }
+    }
+
+    public String getWEffects(weapon w) {
+        if (w != null && w.effects != null) {
+            return w.effects.toString();
+        } else {
+            return null;
+        }
+    }
+
+    public String getPEffects(player p) {
+        if (p.status != null) {
+            return p.status.toString();
+        } else {
+            return null;
+        }
     }
 }

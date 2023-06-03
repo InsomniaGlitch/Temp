@@ -16,11 +16,11 @@ public class player {
     public int curr_health;
     public int def;
     public int speed;
-    power power;
-    path path;
-    weapon weapon;
+    public power power;
+    public path path;
+    public weapon weapon;
     public int surepiority;
-    ArrayList<effect> status;
+    public ArrayList<effect> status;
     public boolean turn;
 
     public player(String name, String description, int max_health, int def, int speed, power power, path path, weapon weapon) {
@@ -40,7 +40,7 @@ public class player {
     }
 
     public void equip(weapon new_weapon) {
-        if (this.weapon != null && this.weapon.getType() == this.path.getWeaponType()) {
+        if (new_weapon.getType().equals(this.path.getWeaponType())) {
             this.weapon = new_weapon;
         } else {
             System.out.println("Cannot be equipped");
@@ -56,6 +56,7 @@ public class player {
     }
 
     public void kill(player p) {
+        System.out.println(p.name + " is dead!");
         p = null;
     }
 
@@ -81,9 +82,12 @@ public class player {
             System.out.println("No weapon equipped");
         }
         if (this.weapon != null && rand <= this.weapon.getCritRate()) {
-            target.getHurt(this.weapon.getDamage()*(this.weapon.getCritDamage() / 100 + 1));
+            int crdmg = this.weapon.getDamage()*(this.weapon.getCritDamage() / 100 + 1);
+            System.out.println("Critical strike! " + target.name + " received " + crdmg + " damage!");
+            target.getHurt(crdmg);
             target.applyEffects(this.weapon.getEffects());
         } else if (this.weapon != null) {
+            System.out.println(target.name + " received " + this.weapon.getDamage() + " damage!");
             target.getHurt(this.weapon.getDamage());
         }
     }

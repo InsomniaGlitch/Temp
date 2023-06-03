@@ -17,6 +17,7 @@ public class Main {
             }
             command = in.nextLine();
         }
+        System.out.print("The battle starts, and the fighters are: " + everyone.toString());
         fight f = new fight(everyone);
         f.cycle();
     }
@@ -29,6 +30,7 @@ public class Main {
         p.description = in.nextLine();
         System.out.print("Health: ");
         p.max_health = in.nextInt();
+        p.curr_health = p.max_health;
         System.out.print("Defence: ");
         p.def = in.nextInt();
         System.out.print("Speed: ");
