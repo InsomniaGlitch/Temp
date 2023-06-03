@@ -13,13 +13,13 @@ import powers.power;
 import weapons.custom_weapon;
 import weapons.weapon;
 
-public abstract class fight {
+public class fight {
     Scanner in = new Scanner(System.in);
-    ArrayList<player> playerlist;
-    ArrayList<custom_weapon> weaponlist;
-    ArrayList<custom_power> powerlist;
-    ArrayList<custom_effect> effectlist;
-    ArrayList<custom_path> pathlist;
+    ArrayList<player> playerlist = new ArrayList<player>();
+    ArrayList<custom_weapon> weaponlist = new ArrayList<custom_weapon>();
+    ArrayList<custom_power> powerlist = new ArrayList<custom_power>();
+    ArrayList<custom_effect> effectlist = new ArrayList<custom_effect>();
+    ArrayList<custom_path> pathlist = new ArrayList<custom_path>();
 
     public fight(ArrayList<player> players) {
         this.playerlist = players;
@@ -33,25 +33,25 @@ public abstract class fight {
 
     public void listPowers() {
         for (power power : powerlist) {
-            System.out.println(power.name + '\n' + '\t' + power.description);
+            System.out.println(power.name + '\n' + '\t'+ "Description: " + power.description);
         }
     }
 
     public void listEffects() {
         for (effect effect : effectlist) {
-            System.out.println(effect.name + '\n' + '\t' + effect.description);
+            System.out.println(effect.name + '\n' + '\t' + "Description: " + effect.description);
         }
     }
 
     public void listPlayers() {
         for (player player : playerlist) {
-            System.out.println(player.name + '\n' + '\t' + player.description);
+            System.out.println(player.name + '\n' + '\t' + "Description: " + player.description);
         }
     }
 
     public void listPaths() {
         for (path path : pathlist) {
-            System.out.println(path.name + '\n' + '\t' + path.description);
+            System.out.println(path.name + '\n' + '\t' + "Description: " + path.description + '\n' + '\t' + "Weapon type: " + path.weapon_type);
         }
     }
 
@@ -70,10 +70,12 @@ public abstract class fight {
         p.name = in.nextLine();
         System.out.print("Description: ");
         p.description = in.nextLine();
+        System.out.print("Weapon type: ");
+        p.weapon_type = in.nextLine();
         pathlist.add(p);
     }
 
-    public void add_power() {
+    public void add_power() throws NullPointerException {
         custom_power p = new custom_power();
         System.out.print("Name: ");
         p.name = in.nextLine();
@@ -82,19 +84,22 @@ public abstract class fight {
         p.setTarget();
         System.out.print("Damage: ");
         p.damage = in.nextInt();
+        if (!effectlist.isEmpty()) {
         System.out.print("Effect(s): ");
-        for (String s : in.nextLine().split(", ")) {
+        String[] ef = in.nextLine().split(", ");
+        for (String s : ef) {
             for (effect e : effectlist) {
-                if (e.name == s) {
+                if (e.name.equals(s)) {
                     p.effects.add(e);
                     break;
                 }
             }
         }
+    }
         powerlist.add(p);
     }
 
-    public void add_weapon() {
+    public void add_weapon() throws NullPointerException {
         custom_weapon w = new custom_weapon();
         System.out.print("Type: ");
         w.type = in.nextLine();
@@ -106,24 +111,28 @@ public abstract class fight {
         w.crit_rate = in.nextDouble();
         System.out.print("Crit damage: ");
         w.crit_damage = in.nextInt();
-        System.out.print("Effect (s): ");
+        if (!effectlist.isEmpty()) {
         System.out.print("Effect(s): ");
-        for (String s : in.nextLine().split(", ")) {
+        String[] ef = in.nextLine().split(", ");
+        for (String s : ef) {
             for (effect e : effectlist) {
-                if (e.name == s) {
+                if (e.name.equals(s)) {
                     w.effects.add(e);
                     break;
                 }
             }
         }
+    }
+        if (!powerlist.isEmpty()) {
         System.out.print("Power: ");
         String s = in.nextLine();
         for (power p : powerlist) {
-            if (p.name == s) {
+            if (p.name.equals(s)) {
                 w.power = p;
                 break;
             }
         }
+    }
         weaponlist.add(w);
     }
 
@@ -137,6 +146,7 @@ public abstract class fight {
         for (int speed : speeds) {
             plrlst.add(getBySpeed(speed));
         }
+        Collections.reverse(plrlst);
         return plrlst;
     }
 
@@ -153,6 +163,7 @@ public abstract class fight {
     }
 
     public void turn(player p) {
+        System.out.println(p.name + " turn, his index is " + playerlist.indexOf(getByName(p.name)));
         switch (in.nextLine()) {
             case "new effect":
                 add_effect();
@@ -162,6 +173,9 @@ public abstract class fight {
                 break;
             case "new weapon":
                 add_weapon();
+                break;
+            case "new path":
+                add_path();
                 break;
             case "list paths":
                 listPaths();
@@ -179,29 +193,38 @@ public abstract class fight {
                 listPlayers();
                 turn(getByName(p.name));
             case "embrace path":
+                System.out.print("Path: ");
                 String s = in.nextLine();
                 for (path pt : pathlist) {
-                    if (pt.name == s) {
+                    if (pt.name.equals(s)) {
                         getByName(p.name).embrace_path(pt);
                         break;
                     }
                 }
+                System.out.println("No such path");
+                turn(p);
             case "equip":
+                System.out.print("Weapon: ");
                 String st = in.nextLine();
                 for (weapon w : weaponlist) {
-                    if (w.name == st) {
+                    if (w.name.equals(st)) {
                         getByName(p.name).equip(w);
                         break;
                     }
                 }
+                System.out.println("No such weapon");
+                turn(p);
             case "embrace power":
+                System.out.print("Power: ");
                 String str = in.nextLine();
                 for (power po : powerlist) {
-                    if (po.name == str) {
+                    if (po.name.equals(str)) {
                         getByName(p.name).embrace_power(po);
                         break;
                     }
                 }
+                System.out.println("No such power");
+                turn(p);
             case "attack":
                 getByName(p.name).attack(getByName(in.nextLine()));
                 break;
@@ -215,15 +238,15 @@ public abstract class fight {
         if (p.curr_health > p.max_health) {
             p.curr_health = p.max_health;
         }
-        if (p.surepiority > playerlist.get(playerlist.indexOf(p) - 1).speed) {
-            getByName(p.name).surepiority -= playerlist.get(playerlist.indexOf(p) - 1).speed;
+        if (playerlist.size() > 1 && playerlist.indexOf(getByName(p.name)) != playerlist.size() - 1 && p.surepiority > playerlist.get(playerlist.indexOf(getByName(p.name)) + 1).speed) {
+            getByName(p.name).surepiority -= playerlist.get(playerlist.indexOf(getByName(p.name)) + 1).speed;
             turn(getByName(p.name));
         }
-        if (p.speed > playerlist.get(playerlist.indexOf(p) - 1).speed) {
-            getByName(p.name).surepiority += p.speed - playerlist.get(playerlist.indexOf(p) - 1).speed;
+        if (playerlist.size() > 1 && playerlist.indexOf(getByName(p.name)) != playerlist.size() - 1 && p.speed > playerlist.get(playerlist.indexOf(getByName(p.name)) + 1).speed) {
+            getByName(p.name).surepiority += p.speed - playerlist.get(playerlist.indexOf(getByName(p.name)) + 1).speed;
         }
-        if (playerlist.indexOf(p) != playerlist.size() - 1 && playerlist.size() > 1) {
-            turn(playerlist.get(playerlist.indexOf(p) + 1));
+        if (playerlist.size() > 1 && playerlist.indexOf(getByName(p.name)) != playerlist.size() - 1) {
+            turn(playerlist.get(playerlist.indexOf(getByName(p.name)) + 1));
         }
     }
 

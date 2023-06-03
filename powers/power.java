@@ -28,7 +28,7 @@ public abstract class power {
     public void setTarget() {
         System.out.print("Target: ");
         String str = in.nextLine();
-        if(str == "enemy" || str == "player") {
+        if(str.equals("enemy") || str.equals( "player")) {
             this.target = str;
         } else {
             System.out.println("Wrong type of target. Try again.");

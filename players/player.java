@@ -14,7 +14,7 @@ public class player {
     public String description;
     public int max_health;
     public int curr_health;
-    int def;
+    public int def;
     public int speed;
     power power;
     path path;
@@ -39,23 +39,8 @@ public class player {
     public player() {
     }
 
-    public player create_player() {
-        player p = new player();
-        System.out.print("Name: ");
-        p.name = in.nextLine();
-        System.out.print("Description: ");
-        p.description = in.nextLine();
-        System.out.print("Health");
-        p.max_health = in.nextInt();
-        System.out.print("Defence");
-        p.def = in.nextInt();
-        System.out.print("Speed");
-        p.speed = in.nextInt();
-        return p;
-    }
-
     public void equip(weapon new_weapon) {
-        if (this.weapon.getType() == this.path.getWeaponType()) {
+        if (this.weapon != null && this.weapon.getType() == this.path.getWeaponType()) {
             this.weapon = new_weapon;
         } else {
             System.out.println("Cannot be equipped");
@@ -92,10 +77,13 @@ public class player {
 
     public void attack(player target) {
         Double rand = Math.random()*100;
-        if (rand <= this.weapon.getCritRate()) {
+        if (this.weapon == null) {
+            System.out.println("No weapon equipped");
+        }
+        if (this.weapon != null && rand <= this.weapon.getCritRate()) {
             target.getHurt(this.weapon.getDamage()*(this.weapon.getCritDamage() / 100 + 1));
             target.applyEffects(this.weapon.getEffects());
-        } else {
+        } else if (this.weapon != null) {
             target.getHurt(this.weapon.getDamage());
         }
     }
