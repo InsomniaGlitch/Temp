@@ -163,7 +163,7 @@ public class fight {
     }
 
     public void turn(player p) {
-        System.out.println(p.name + " turn, his index is " + playerlist.indexOf(getByName(p.name)));
+        System.out.println('\n' + p.name + " turn, his index is " + playerlist.indexOf(getByName(p.name)));
         switch (in.nextLine()) {
             case "new effect":
                 add_effect();
